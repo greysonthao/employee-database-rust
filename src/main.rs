@@ -8,6 +8,8 @@ fn main() {
 
     let mut employees = vec![];
 
+    let mut employees_and_dept = HashMap::new();
+
     loop {
         println!("\nPlease select an option by typing the number.");
 
@@ -27,8 +29,6 @@ fn main() {
             Ok(num) => num,
             Err(_) => continue,
         };
-
-        let mut employees_and_dept = HashMap::new();
 
         match input {
             1 => {
@@ -76,20 +76,33 @@ fn main() {
 
                 let dept_name = dept_name.trim().to_string();
 
-                let mut employee_list = employees.clone();
+                println!("FOLKS IN THE vectors {:?}, {:?}", departments, employees);
 
-                let mut depts_list = departments.clone();
+                //BUG REPORT!!!
+                //when the below function runs, it is not taking the first element in the vectors.
 
-                println!("Tester {:?}:{:?}", depts_list, employee_list);
-
-                employees_and_dept = depts_list
+                employees_and_dept = departments
+                    .clone()
                     .into_iter()
-                    .zip(employee_list.into_iter())
+                    .zip(employees.clone().into_iter())
                     .collect();
 
-                //employees_and_dept = add_to_hashmap(departments, employees);
+                println!("FOLKS IN THE HASHMAP {:?}", employees_and_dept);
 
-                println!("{:#?}", employees_and_dept);
+                //let mut specific_list = vec![];
+
+                //for (key, value) in &employees_and_dept {}
+
+                for (key, value) in &employees_and_dept {
+                    println!("{:?}: {:?}", key, value);
+
+                    /* if key.contains(&dept_name) {
+                        specific_list.push(value);
+                        println!("adding names to list {:?}", specific_list);
+                    } */
+                }
+
+                //println!("{:#?}", specific_list);
             }
             //3 => //all_employees_sorted_by_dept(),
             4 => {
