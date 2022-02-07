@@ -1,12 +1,9 @@
+use itertools::Itertools;
 use std::collections::HashMap;
 use std::io;
 
 fn main() {
     println!("\nEMPLOYEE DATABASE\n-----------------");
-
-    let mut departments = vec![];
-
-    let mut employees = vec![];
 
     let mut employees_and_dept = HashMap::new();
 
@@ -18,7 +15,6 @@ fn main() {
         println!("3. Retrieve all company employees sorted by department");
         println!("4. Quit");
 
-        //user chooses option
         let mut input = String::new();
 
         io::stdin()
@@ -32,7 +28,6 @@ fn main() {
 
         match input {
             1 => {
-                //new_employee
                 println!("\nPlease input the Employee's full name.");
 
                 let mut name = String::new();
@@ -58,15 +53,12 @@ fn main() {
                     name, department
                 );
 
-                departments.push(department);
+                employees_and_dept.insert(name, department);
 
-                employees.push(name);
-
-                println!("{:?}:{:?}", departments, employees);
+                println!("FOLKS IN THE HASHMAP {:?}", employees_and_dept);
             }
             2 => {
-                //employee_in_dept
-                println!("Please type the department name.");
+                println!("\nPlease type the department name.");
 
                 let mut dept_name = String::new();
 
@@ -76,35 +68,34 @@ fn main() {
 
                 let dept_name = dept_name.trim().to_string();
 
-                println!("FOLKS IN THE vectors {:?}, {:?}", departments, employees);
+                println!("");
 
-                //BUG REPORT!!!
-                //when the below function runs, it is not taking the first element in the vectors.
-
-                employees_and_dept = departments
-                    .clone()
-                    .into_iter()
-                    .zip(employees.clone().into_iter())
-                    .collect();
-
-                println!("FOLKS IN THE HASHMAP {:?}", employees_and_dept);
-
-                //let mut specific_list = vec![];
-
-                //for (key, value) in &employees_and_dept {}
-
-                for (key, value) in &employees_and_dept {
-                    println!("{:?}: {:?}", key, value);
-
-                    /* if key.contains(&dept_name) {
-                        specific_list.push(value);
-                        println!("adding names to list {:?}", specific_list);
-                    } */
+                for (ab, bc) in &employees_and_dept {
+                    if bc.eq(&dept_name) {
+                        println!("{}", ab);
+                    } else if !bc.is_empty() {
+                        ();
+                    };
                 }
-
-                //println!("{:#?}", specific_list);
             }
-            //3 => //all_employees_sorted_by_dept(),
+            3 =>
+            //all_employees_sorted_by_dept()
+            {
+                /* println!(
+                    "SORTED BY DEPT IN THE HASHMAP {:?}",
+                    &employees_and_dept
+                        .iter()
+                        .sorted_by(|b, a| Ord::cmp(&b.1, &a.1))
+                        .map(|(person, _age)| person)
+                ); */
+
+                let sorted_list = &employees_and_dept
+                    .iter()
+                    .sorted_by(|b, a| Ord::cmp(&b.1, &a.1))
+                    .map(|(person, _age)| person);
+
+                println!("{:#?}", &sorted_list);
+            }
             4 => {
                 println!("You've exited the application.");
                 std::process::exit(exitcode::OK);
@@ -116,10 +107,3 @@ fn main() {
 
 //fn new_employee(mut departments: Vec<String>, mut employees: Vec<String>)
 //ADD A NEW EMPLOYEE TO THE DB
-
-fn add_to_hashmap(departments: Vec<String>, employees: Vec<String>) -> HashMap<String, String> {
-    let employee_and_dept: HashMap<String, String> =
-        departments.into_iter().zip(employees.into_iter()).collect();
-
-    employee_and_dept
-}
